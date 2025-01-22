@@ -29,4 +29,3 @@ jobs:
       azureStaticWebApp: '$(azureResourceId)'
       azureSubscription: 'AzurePersonal'
     condition: succeeded()
-    dependsOn: Build
