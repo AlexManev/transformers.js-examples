@@ -1,0 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureResourceId: '/subscriptions/256b409b-97ce-4b9c-8769-1e7f7d0c8f69/resourceGroups/LocalLLM/providers/Microsoft.Web/staticSites/DeepSeek-WebGPU'
+
+steps:
+- task: UseNode@1
+  inputs:
+    version: '18.x'
+  
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+
+- task: AzureStaticWebApp@0
+  inputs:
+    app_location: 'dist'
+    output_location: ''
+    azure_static_web_apps_api_token: $(deploymentToken)
+    skip_app_build: true
+    verbose: true
+    resourceGroupName: 'LocalLLM'
+    connectionType: 'AzureRM'
+    azureStaticWebApp: '$(azureResourceId)'
+    azureSubscription: 'AzurePersonal'
